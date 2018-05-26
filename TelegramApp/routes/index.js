@@ -77,6 +77,11 @@ function mandarEncuesta(user_id,callback){
 	callback();
 }
 
+function enviarOfertaLaboral(req, user_id){
+	sendMessage(user_id, "Tenemos una nueva oferta que podría interesarle!\n"+ req.body.payload);
+	
+}
+
 function estaSiendoEncuestado(user_id){
 	for (var i=0; i < usuarios.length; i++){
 		if(usuarios[i].user_id == user_id && usuarios[i].estadoEncuesta > -1){
@@ -86,11 +91,15 @@ function estaSiendoEncuestado(user_id){
 	return false;
 }
 
-function sendMessage(user,message){
+function sendMessage(user,message,callback){
 	service.sendMessage(
     user,
     message,
-		(error, result) => {if(error){ console.log("hubo un error");}
+		(error, result) => {
+			if(error){ throw error;};
+			console.log(typeof callback);
+			if( callback !=undefined){
+			callback();}
 		}
 	);
 }
@@ -100,26 +109,25 @@ router.get('/', function(req, res, next) {
 });
 
 router.post("/", function(req,res,next){
-	console.log(usuarios[0],false,4);
+	console.log(req.body);
 	if(req.method === "POST" && req.body.kind != undefined && req.body.kind == "encuestar"){
 		var user_id = req.body.user_id;
 		mandarEncuesta(user_id,function(){res.sendStatus(200)});
 	}
-	else if (req.method === "POST" && req.body.kind != undefined && req.body.kind == "encuestar"){
-		
+	else if (req.method === "POST" && req.body.kind != undefined && req.body.kind == "mandarOfertaLaboral"){
+		var user_id = req.body.user_id;
+		enviarOfertaLaboral(req,user_id);
 	}
 	else{
 		var user_id = req.body.message.from.id;
-		if(user_id != undefined){
-			if(estaSiendoEncuestado(user_id)){
-				recibirEncuesta(req,user_id, function(){mandarEncuesta(user_id, function(){res.sendStatus(200)})});
-			}
-			else{
-				sendMessage(user_id,"Gracias por participar.");
-				res.sendStatus(200);
-			}
+		if(user_id != undefined && estaSiendoEncuestado(user_id)){
+				recibirEncuesta(req,user_id, function(){
+					mandarEncuesta(user_id, function(){
+						res.sendStatus(200)
+					})
+				});
 		}
-		{
+		else{
 			res.sendStatus(200);
 		}
 	}
