@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
+var request = require('request');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -18,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -37,5 +41,10 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+request.get({url :'https://api.telegram.org/bot551055113:AAG7NC5L7UxRro1DWUQ1863U8D_X5jVrC4I/setWebhook?url=https://intense-brushlands-95803.herokuapp.com/'}).on('response', function (error, response, body) {
+	if(error){console.log(error)};
+})
+
 
 module.exports = app;
