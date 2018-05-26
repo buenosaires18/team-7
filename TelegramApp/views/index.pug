@@ -106,8 +106,6 @@ html(lang='en')
 		script(language='javascript', type='text/javascript').
 			function submit(){
 				var data = { kind: "encuestar", user_id:$("#userID").val()}
-				alert(data);
 				$.post("https://intense-brushlands-95803.herokuapp.com/", data ,function(data, status){
-				alert("Data: " + data + "\\nStatus: " + status);
 				});
 			}
