@@ -14,29 +14,37 @@ const service = new cloudrail.services.Telegram(
 
 router.use(bodyParser.json());
 
-/*
-function parsearMensajeRecivido (){
-	service.parseReceivedMessages(
-		readableStream,
-		(error, result) => {
-			console.log(result);
-			console.log(JSON.stringify(result));
-			// Check for potential error and use the result
-		}
-	)
-}
-*/
-
-var usuarios=[{user_id : "219148418", encuestando : false, username : 'somethingxblue', estadoEncuesta : -1 }];
+var usuarios=[{user_id : "219148418", username : 'somethingxblue', estadoEncuesta : -1, cantidadEncuestasRespondidas : 0,respuestaPregunta1 : "SI", respuestaPregunta2 : "NO", respuestaPregunta3 : "SI" }];
 var MENSAJE_BIENVENIDO = "Hola, tenemos una pequeña encuesta para que responda";
-var PRIMERA_PREGUNTA = "Se encuentra actualmente trabajando?";
-var SEGUNDA_PREGUNTA_TRABAJANDO = "Esta en blanco?";
-var SEGUNDA_PREGUNTA_NO_TRABAJANDO  = "Se encuentra estudiando?";
+var PRIMERA_PREGUNTA = "Se encuentra actualmente trabajando? (SI/NO)";
+var SEGUNDA_PREGUNTA_TRABAJANDO = "Esta en blanco?(SI/NO)";
+var SEGUNDA_PREGUNTA_NO_TRABAJANDO  = "Se encuentra estudiando?(SI/NO)";
 var MENSAJE_DESPEDIDA = "Muchas gracias por responder";
 
-
-function encuestar(user_id,callback){
+function recibirEncuesta(req,user_id,callback){
 	var encuestado ;
+	for (var i=0; i < usuarios.length; i++){
+		if(usuarios[i].user_id == user_id){
+			encuestado = usuarios[i];
+		}
+	}
+	if(encuestado.estadoEncuesta ==0){
+		//guardar en la base de datos
+		callback();
+	}
+	else if(encuestado.estadoEncuesta ==1){
+		encuestado.respuestaPregunta1 = req.body.message.text.toUpperCase();
+		//guardar en la base de datos la respuesta
+		callback();
+	}
+	else if(encuestado.estadoEncuesta ==2){
+		encuestado.respuestaPregunta2 = req.body.message.text.toUpperCase();
+		//guardar en la base de datos la respuesta
+		callback();
+	}
+}
+
+function mandarEncuesta(user_id,callback){
 	for (var i=0; i < usuarios.length; i++){
 		if(usuarios[i].user_id == user_id){
 			encuestado = usuarios[i];
@@ -44,25 +52,34 @@ function encuestar(user_id,callback){
 	}
 	if(encuestado.estadoEncuesta== -1){
 		sendMessage(user_id,MENSAJE_BIENVENIDO);
-		encuestado.encuestando = true;
+		encuestado.estadoEncuesta += 1
+		//crear una entrada en la base de datos para la encuesta
 	}
 	else if(encuestado.estadoEncuesta== 0){
 		sendMessage(user_id,PRIMERA_PREGUNTA);
+		encuestado.estadoEncuesta += 1
 	}
-	else if(encuestado.estadoEncuesta== 1){
-		
+	else if(encuestado.estadoEncuesta == 1){
+		if(encuestado.respuestaPregunta1.toUpperCase()=="SI"){
+			sendMessage(user_id,SEGUNDA_PREGUNTA_TRABAJANDO);
+		}
+		else{
+			sendMessage(user_id,SEGUNDA_PREGUNTA_NO_TRABAJANDO);
+		}
+		encuestado.estadoEncuesta += 1
 	}
 	else if(encuestado.estadoEncuesta==2){
 		sendMessage(user_id,MENSAJE_DESPEDIDA);
-		encuestado.encuestando = false;
+		encuestado.cantidadEncuestasRespondidas += 1;
+		encuestado.estadoEncuesta = -1;
 	}
-	encuestado.estadoEncuesta += 1
+	
 	callback();
 }
 
 function estaSiendoEncuestado(user_id){
 	for (var i=0; i < usuarios.length; i++){
-		if(usuarios[i].user_id == user_id && usuarios[i].encuestando = true){
+		if(usuarios[i].user_id == user_id && usuarios[i].estadoEncuesta > -1){
 			return true;
 		}
 	}
@@ -83,28 +100,29 @@ router.get('/', function(req, res, next) {
 });
 
 router.post("/", function(req,res,next){
+	console.log(usuarios[0],false,4);
 	if(req.method === "POST" && req.body.kind != undefined && req.body.kind == "encuestar"){
 		var user_id = req.body.user_id;
-		encuestar(user_id,function(){res.sendStatus(200)});
+		mandarEncuesta(user_id,function(){res.sendStatus(200)});
+	}
+	else if (req.method === "POST" && req.body.kind != undefined && req.body.kind == "encuestar"){
+		
 	}
 	else{
-		console.log(req.body.message.from.id);
 		var user_id = req.body.message.from.id;
-		
 		if(user_id != undefined){
 			if(estaSiendoEncuestado(user_id)){
-				encuestar(user_id,function(){res.sendStatus(200)});
+				recibirEncuesta(req,user_id, function(){mandarEncuesta(user_id, function(){res.sendStatus(200)})});
 			}
 			else{
-				sendMessage(user_id,"Mensaje cualquiera");
+				sendMessage(user_id,"Gracias por participar.");
+				res.sendStatus(200);
 			}
 		}
-		
-		
-		
+		{
+			res.sendStatus(200);
+		}
 	}
-
-	res.sendStatus(200);
 });
 
 module.exports = router;
