@@ -61,6 +61,11 @@ html(lang='en')
 								br
 								input#userID(type='hidden', name='userID', value='219148418')
 								button(name='kind', value='encuestar', onclick='submit()') encuestar
+								br
+								br
+								textarea#userID2(rows='4', cols='50', name='comment', form='usrform', value='219148418') Oferta laboral acá...
+								button(name='kind', onclick='submit2()') Mandar oferta laboral
+
 					// /.card
 					.card.card-outline-secondary.my-4
 						.card-header
@@ -109,3 +114,8 @@ html(lang='en')
 				$.post("https://intense-brushlands-95803.herokuapp.com/", data ,function(data, status){
 				});
 			}
+			function submit2(){
+				var data = { kind: "mandarOfertaLaboral", payload:$("#userID2").val(), user_id:$("#userID").val() }
+				$.post("https://intense-brushlands-95803.herokuapp.com/", data ,function(data, status){
+				});
+			  }
