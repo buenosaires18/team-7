@@ -1,0 +1,76 @@
+doctype html
+html(lang='en')
+	head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+		meta(name='description', content='')
+		meta(name='author', content='')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+		title Shop Item - Start Bootstrap Template
+		// Bootstrap core CSS
+		link(href='vendor/bootstrap/css/bootstrap.min.css', rel='stylesheet')
+		// Custom styles for this template
+		link(href='css/shop-item.css', rel='stylesheet')
+		script(src='https://code.jquery.com/jquery-1.10.2.js')
+		style.
+			.containerMetricas {
+				width: 100%; 
+				background-color: #ddd;
+			}
+			.skills {
+				text-align: right;
+				padding-right: 20px; 
+				line-height: 40px; 
+				color: white;
+			}
+			.html {width: 90%; 
+				background-color: #4CAF50;
+			}
+			.css {width: 80%;
+				background-color: #2196F3;
+			} 
+			.js {width: 65%; 
+				background-color: #f44336;
+			}
+			.php {width: 60%; 
+				background-color: #808080;
+			}
+	body
+		nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
+			.container
+				a.navbar-brand(href='#') Fundacion pescar
+				button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+					span.navbar-toggler-icon
+				#navbarResponsive.collapse.navbar-collapse
+					ul.navbar-nav.ml-auto
+						li.nav-item.active
+							a.nav-link(href='../')
+								| Home
+								span.sr-only (current)
+						li.nav-item
+						li.nav-item
+							a.nav-link(href='/metricas') Metricas
+						li.nav-item
+	
+		.container
+			.row
+			.row
+				.col-lg-6
+					
+				.col-lg-6
+					p Usuarios con trabajo.
+					.containerMetricas
+						.skills.html 60%
+					p Usuarios que tienen trabajo y es en blanco.
+					.containerMetricas
+						.skills.css 80%
+					p Usuarios insatisfechos con su condición laboral.
+					.containerMetricas
+						.skills.js 65%
+					p Usuarios que actualmente cursan estudios superiores.
+					.containerMetricas
+						.skills.php 60%
+		script(src='vendor/jquery/jquery.min.js')
+		script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js')
+
