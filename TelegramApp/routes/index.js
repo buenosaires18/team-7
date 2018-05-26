@@ -110,11 +110,11 @@ router.get('/', function(req, res, next) {
 
 router.post("/", function(req,res,next){
 	console.log(req.body);
-	if(req.method === "POST" && req.body.kind != undefined && req.body.kind == "encuestar"){
+	if(req.method.toUpperCase() === "POST" && req.body.kind != undefined && req.body.kind == "encuestar"){
 		var user_id = req.body.user_id;
 		mandarEncuesta(user_id,function(){res.sendStatus(200)});
 	}
-	else if (req.method === "POST" && req.body.kind != undefined && req.body.kind == "mandarOfertaLaboral"){
+	else if (req.method.toUpperCase() === "POST" && req.body.kind != undefined && req.body.kind == "mandarOfertaLaboral"){
 		var user_id = req.body.user_id;
 		enviarOfertaLaboral(req,user_id);
 	}

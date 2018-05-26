@@ -1,5 +1,113 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{Code-for-good}
+doctype html
+html(lang='en')
+	head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+		meta(name='description', content='')
+		meta(name='author', content='')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+		title Shop Item - Start Bootstrap Template
+		// Bootstrap core CSS
+		link(href='vendor/bootstrap/css/bootstrap.min.css', rel='stylesheet')
+		// Custom styles for this template
+		link(href='css/shop-item.css', rel='stylesheet')
+		script(src='https://code.jquery.com/jquery-1.10.2.js')
+	body
+		// Navigation
+		nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
+			.container
+				a.navbar-brand(href='#') Start Bootstrap
+				button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+					span.navbar-toggler-icon
+				#navbarResponsive.collapse.navbar-collapse
+					ul.navbar-nav.ml-auto
+						li.nav-item.active
+							a.nav-link(href='#')
+								| Home
+								span.sr-only (current)
+						li.nav-item
+						li.nav-item
+							a.nav-link(href='#') Metricas
+						li.nav-item
+		// Page Content
+		.container
+			.row
+				.col-lg-6
+					h1.my-4 Egresados
+					.list-group
+						a.list-group-item.active(data-toggle='tab', href='#menu') John Doe
+						a.list-group-item(data-toggle='tab', href='#menu2') Han Solo
+						a.list-group-item(data-toggle='tab', href='#menu3') Carlos Sanchez
+						a.list-group-item(data-toggle='tab', href='#menu2') Sofia Lopez
+						a.list-group-item(data-toggle='tab', href='#menu3') Maria Katli
+						a.list-group-item(data-toggle='tab', href='#menu3') Juan Pablo Morgan
+				// /.col-lg-3
+				.col-lg-6
+					#menu.card.mt-4(div='')
+						.card-body
+							h3.card-title John Doe
+							h5 Datos Personales
+							hr
+							p.card-text
+								| Domicilio: Belgrano 483, 1ro 5to, Capital Federal
+								br
+								|               Telefono de Contacto: 0112536483
+								br
+								|               DNI: 3447587
+								br
+								|             Año de egreso: 08/102017 
+								br
+								br
+								br
+								input#userID(type='hidden', name='userID', value='219148418')
+								button(name='kind', value='encuestar', onclick='submit()') encuestar
+					// /.card
+					.card.card-outline-secondary.my-4
+						.card-header
+							h5  Hoja de ruta
+						.card-body
+							p
+								| Hola, tenemos una pequeña encuesta para que responda
+							small.text-muted Fecha Enviado 26/05/18
+							hr
+							p Se encuentra actualmente trabajando?
+							small.text-muted Fecha Enviado 26/05/18
+							hr
+							p Si
+							small.text-muted Fecha Recibido 26/05/18
+							hr
+							p Esta en blanco?
+							small.text-muted Fecha Enviado 26/05/18
+							hr
+							p Si
+							small.text-muted Fecha Recibido 26/05/18
+							hr
+							p Se encuentra estudiando?
+							small.text-muted Fecha Enviado 26/05/18
+							hr
+							p No
+							small.text-muted Fecha Recibido 26/05/18
+							hr
+							p Muchas gracias por responder
+							small.text-muted Fecha Enviado 26/05/18
+							hr
+					// /.card
+				// /.col-lg-9
+		// /.container
+		// Footer
+		footer.py-5.bg-dark
+			.container
+				p.m-0.text-center.text-white
+			// /.container
+		// Bootstrap core JavaScript
+		script(src='vendor/jquery/jquery.min.js')
+		script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js')
+		script(language='javascript', type='text/javascript').
+			function submit(){
+				var data = { kind: "encuestar", user_id:$("#userID").val()}
+				alert(data);
+				$.post("https://intense-brushlands-95803.herokuapp.com/", data ,function(data, status){
+				alert("Data: " + data + "\\nStatus: " + status);
+				});
+			}
